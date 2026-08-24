@@ -59,7 +59,7 @@
         }
 
         .container {
-            max-width: 360px;
+            max-width: 380px;
             width: 100%;
             text-align: center;
             position: relative;
@@ -81,13 +81,22 @@
             gap: 14px;
         }
 
+        /* Контейнер для строки (основная кнопка + кнопка копирования) */
+        .link-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        /* Основная кнопка ссылки */
         .btn {
             position: relative;
             display: flex;
             align-items: center;
             justify-content: flex-start;
             padding: 18px 24px;
-            border-radius: 28px;
+            border-radius: 24px;
             text-decoration: none;
             font-weight: 600;
             font-size: 18px;
@@ -96,16 +105,16 @@
             cursor: pointer;
             border: none;
             overflow: hidden;
+            flex: 1;
             transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1),
                         background-color 0.3s cubic-bezier(0.2, 0, 0, 1),
                         box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-            width: 100%;
         }
 
         .btn:hover {
             background-color: #f0e8ff;
-            transform: translateY(-3px) scale(1.015);
+            transform: translateY(-2px) scale(1.01);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
 
@@ -113,7 +122,6 @@
             transform: scale(0.96);
             background-color: #d3c0f9;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-            transition: transform 0.1s ease;
         }
 
         .btn i {
@@ -127,6 +135,47 @@
 
         .btn:hover i {
             transform: scale(1.15) rotate(-5deg);
+        }
+
+        /* Квадратная кнопка копирования со скругленными гранями */
+        .copy-btn {
+            position: relative;
+            width: 58px;
+            height: 58px;
+            border-radius: 20px;
+            background-color: #e4d8ff;
+            color: #553b88;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1),
+                        background-color 0.3s cubic-bezier(0.2, 0, 0, 1),
+                        box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .copy-btn:hover {
+            background-color: #f0e8ff;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.92);
+            background-color: #d3c0f9;
+        }
+
+        .copy-btn i {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .copy-btn:hover i {
+            transform: scale(1.15);
         }
 
         .ripple {
@@ -193,7 +242,7 @@
             background-color: #f0e8ff;
         }
 
-        /* Модальное окно */
+        /* Модалка с собакой */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -263,30 +312,49 @@
         <h1>Где меня найти:</h1>
 
         <div class="links">
-            <a href="https://t.me/xxpeakx" target="_blank" class="btn">
-                <i class="fa-brands fa-telegram"></i>
-                <span>Telegram</span>
-            </a>
+            <!-- Telegram -->
+            <div class="link-row">
+                <a href="https://t.me/xxpeakx" target="_blank" class="btn">
+                    <i class="fa-brands fa-telegram"></i>
+                    <span>Telegram</span>
+                </a>
+                <button class="copy-btn" onclick="copyNickname('@xxpeakx', 'TG')" title="Скопировать юзернейм Telegram">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
 
-            <a href="https://discordapp.com/users/1464303389646000261" target="_blank" class="btn">
-                <i class="fa-brands fa-discord"></i>
-                <span>Discord</span>
-            </a>
+            <!-- Discord -->
+            <div class="link-row">
+                <a href="https://discordapp.com/users/1464303389646000261" target="_blank" class="btn">
+                    <i class="fa-brands fa-discord"></i>
+                    <span>Discord</span>
+                </a>
+                <button class="copy-btn" onclick="copyNickname('femboysobak', 'Discord')" title="Скопировать ник Discord">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
 
-            <button class="btn" onclick="copyNickname('femboysobak')">
-                <i class="fa-regular fa-copy"></i>
-                <span>Скопировать ник</span>
-            </button>
+            <!-- Steam -->
+            <div class="link-row">
+                <a href="https://steamcommunity.com/profiles/76561199866082489" target="_blank" class="btn">
+                    <i class="fa-brands fa-steam"></i>
+                    <span>Steam</span>
+                </a>
+                <button class="copy-btn" onclick="copyNickname('tweekyer2б', 'Steam')" title="Скопировать ник Steam">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
 
-            <a href="https://steamcommunity.com/profiles/76561199866082489" target="_blank" class="btn">
-                <i class="fa-brands fa-steam"></i>
-                <span>Steam</span>
-            </a>
-
-            <a href="https://github.com/femboysobak" target="_blank" class="btn">
-                <i class="fa-brands fa-github"></i>
-                <span>GitHub</span>
-            </a>
+            <!-- GitHub -->
+            <div class="link-row">
+                <a href="https://github.com/femboysobak" target="_blank" class="btn">
+                    <i class="fa-brands fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+                <button class="copy-btn" onclick="copyNickname('femboysobak', 'GitHub')" title="Скопировать ник GitHub">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -303,10 +371,12 @@
         </div>
     </div>
 
+    <!-- Всплывающее уведомление -->
     <div class="toast" id="toast">Ник скопирован!</div>
 
     <script>
-        document.querySelectorAll('.btn').forEach(button => {
+        // Ripple-эффект для всех кнопок
+        document.querySelectorAll('.btn, .copy-btn').forEach(button => {
             button.addEventListener('click', function(e) {
                 const circle = document.createElement('span');
                 const diameter = Math.max(this.clientWidth, this.clientHeight);
@@ -327,16 +397,22 @@
             });
         });
 
-        function copyNickname(text) {
+        // Универсальное копирование ников
+        let toastTimeout;
+        function copyNickname(text, serviceName) {
             navigator.clipboard.writeText(text).then(() => {
                 const toast = document.getElementById('toast');
+                toast.innerText = `${serviceName} ник скопирован!`;
                 toast.classList.add('show');
-                setTimeout(() => {
+                
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => {
                     toast.classList.remove('show');
-                }, 2000);
+                }, 2200);
             });
         }
 
+        // Открытие/закрытие модалки с собакой
         function toggleModal(show) {
             const modal = document.getElementById('dogModal');
             if (show) {
