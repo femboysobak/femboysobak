@@ -15,19 +15,77 @@
 
         body {
             font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
-            /* Основной фон как на картинке */
             background-color: #c7b3f9;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Минималистичные фигуры на фоне */
+        .bg-shape {
+            position: absolute;
+            background: rgba(230, 219, 255, 0.45);
+            pointer-events: none;
+            z-index: 1;
+            animation: float 8s ease-in-out infinite alternate;
+        }
+
+        .shape-1 {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            top: 10%;
+            left: -30px;
+        }
+
+        .shape-2 {
+            width: 180px;
+            height: 180px;
+            border-radius: 48px;
+            bottom: 8%;
+            right: -40px;
+            transform: rotate(25deg);
+            animation-delay: -3s;
+        }
+
+        .shape-3 {
+            width: 90px;
+            height: 90px;
+            border-radius: 30px;
+            top: 22%;
+            right: 12%;
+            transform: rotate(-15deg);
+            animation-delay: -5s;
+        }
+
+        .shape-4 {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            bottom: 25%;
+            left: 10%;
+            animation-delay: -2s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-20px) rotate(10deg);
+            }
         }
 
         .container {
             max-width: 360px;
             width: 100%;
             text-align: center;
+            position: relative;
+            z-index: 2;
         }
 
         h1 {
@@ -41,49 +99,82 @@
         .links {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
-        /* Кнопки в стиле Material You Pill/Container */
+        /* Кнопки в стиле Material You с ripple-эффектом и анимациями */
         .btn {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            padding: 16px 24px;
-            border-radius: 28px; /* Капсульная форма Material 3 */
+            padding: 18px 24px;
+            border-radius: 28px;
             text-decoration: none;
             font-weight: 600;
             font-size: 18px;
             color: #2b184f;
-            background-color: #e6dbff; /* Светло-фиолетовый тон Material You */
-            transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+            background-color: #e6dbff;
             cursor: pointer;
             border: none;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1),
+                        background-color 0.3s cubic-bezier(0.2, 0, 0, 1),
+                        box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1);
+            box-shadow: 0 2px 6px rgba(43, 24, 79, 0.04);
         }
 
-        /* Эффект нажатия и наведения по гайдлайнам Google */
         .btn:hover {
             background-color: #ded0ff;
-            transform: scale(1.02);
-            box-shadow: 0 2px 8px rgba(43, 24, 79, 0.08);
+            transform: translateY(-3px) scale(1.015);
+            box-shadow: 0 8px 18px rgba(43, 24, 79, 0.1);
         }
 
         .btn:active {
-            transform: scale(0.98);
+            transform: scale(0.96);
             background-color: #d3c0f9;
+            box-shadow: 0 2px 4px rgba(43, 24, 79, 0.08);
+            transition: transform 0.1s ease;
         }
 
-        /* Иконка слева в Material стиле */
         .btn i {
             font-size: 22px;
             margin-right: 16px;
             color: #553b88;
             width: 24px;
             text-align: center;
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .btn:hover i {
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        /* Эффект волны при клике (Material Ripple) */
+        .ripple {
+            position: absolute;
+            background: rgba(85, 59, 136, 0.25);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- Минималистичные плавающие формы на фоне -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+    <div class="bg-shape shape-4"></div>
 
     <div class="container">
         <h1>Где меня найти:</h1>
@@ -111,5 +202,28 @@
         </div>
     </div>
 
+    <!-- Скрипт для плавного эффекта клика (Material Ripple) -->
+    <script>
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const circle = document.createElement('span');
+                const diameter = Math.max(this.clientWidth, this.clientHeight);
+                const radius = diameter / 2;
+
+                const rect = this.getBoundingClientRect();
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${e.clientX - rect.left - radius}px`;
+                circle.style.top = `${e.clientY - rect.top - radius}px`;
+                circle.classList.add('ripple');
+
+                const ripple = this.querySelector('.ripple');
+                if (ripple) {
+                    ripple.remove();
+                }
+
+                this.appendChild(circle);
+            });
+        });
+    </script>
 </body>
 </html>
