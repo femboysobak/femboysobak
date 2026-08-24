@@ -661,15 +661,14 @@
     <div class="toast" id="toast">Ник скопирован!</div>
 
     <script>
-        // Загрузка счётчика посещений через API (используем уникальный namespace/key для твоего сайта)
+        // Загрузка счётчика посещений через API
         fetch('https://api.counterapi.dev/v1/femboysobak/site-visits/up')
             .then(response => response.json())
             .then(data => {
-                document.getElementById('visitCount').innerText = data.count;
+                document.getElementById('visitCount').innerText = data.value !== undefined ? data.value : (data.count || '1');
             })
             .catch(error => {
-                // Запасной вариант, если API временно недоступно
-                document.getElementById('visitCount').innerText = '100+';
+                document.getElementById('visitCount').innerText = '1';
             });
 
         // Ripple эффект
