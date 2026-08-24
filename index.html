@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Где меня найти</title>
-    <!-- Подключаем иконки Font Awesome -->
+    <!-- Иконки Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
@@ -29,7 +29,7 @@
                 linear-gradient(135deg, #5b3e85 0%, #2f1c48 100%);
         }
 
-        /* Обрушиваем сетку через SVG-фильтр (эффект мятой ткани) */
+        /* Мятая сетка */
         .distorted-grid {
             position: absolute;
             top: -10%; left: -10%; right: -10%; bottom: -10%;
@@ -42,7 +42,7 @@
             z-index: 1;
         }
 
-        /* Складки, тени от изгибов и текстурный шум */
+        /* Зернистость и эффекты */
         body::after {
             content: "";
             position: absolute;
@@ -100,6 +100,7 @@
                         background-color 0.3s cubic-bezier(0.2, 0, 0, 1),
                         box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            width: 100%;
         }
 
         .btn:hover {
@@ -143,11 +144,112 @@
                 opacity: 0;
             }
         }
+
+        /* Уведомление о копировании */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background-color: #e4d8ff;
+            color: #2b184f;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Кнопка с собакой в левом нижнем углу */
+        .dog-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background-color: #e4d8ff;
+            color: #553b88;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .dog-btn:hover {
+            transform: scale(1.1) rotate(12deg);
+            background-color: #f0e8ff;
+        }
+
+        /* Модальное окно */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background-color: #2b184f;
+            border: 2px solid #684a98;
+            padding: 16px;
+            border-radius: 24px;
+            max-width: 320px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-card img {
+            width: 100%;
+            border-radius: 16px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .close-btn {
+            background: #e4d8ff;
+            color: #2b184f;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Невидимый SVG фильтр деформации для сетки -->
     <svg style="display: none;">
         <filter id="crumple">
             <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="3" result="turbulence" />
@@ -155,7 +257,6 @@
         </filter>
     </svg>
 
-    <!-- Искажённая мятая сетка -->
     <div class="distorted-grid"></div>
 
     <div class="container">
@@ -172,6 +273,11 @@
                 <span>Discord</span>
             </a>
 
+            <button class="btn" onclick="copyNickname('femboysobak')">
+                <i class="fa-regular fa-copy"></i>
+                <span>Скопировать ник</span>
+            </button>
+
             <a href="https://steamcommunity.com/profiles/76561199866082489" target="_blank" class="btn">
                 <i class="fa-brands fa-steam"></i>
                 <span>Steam</span>
@@ -183,6 +289,21 @@
             </a>
         </div>
     </div>
+
+    <!-- Кнопка вызова собаки -->
+    <button class="dog-btn" onclick="toggleModal(true)">
+        <i class="fa-solid fa-dog"></i>
+    </button>
+
+    <!-- Модалка с картинкой -->
+    <div class="modal-overlay" id="dogModal" onclick="toggleModal(false)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <img src="photo_2026-08-25_02-10-40.jpg" alt="Собака">
+            <button class="close-btn" onclick="toggleModal(false)">Закрыть</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Ник скопирован!</div>
 
     <script>
         document.querySelectorAll('.btn').forEach(button => {
@@ -204,6 +325,29 @@
 
                 this.appendChild(circle);
             });
+        });
+
+        function copyNickname(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            });
+        }
+
+        function toggleModal(show) {
+            const modal = document.getElementById('dogModal');
+            if (show) {
+                modal.classList.add('active');
+            } else {
+                modal.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
         });
     </script>
 </body>
