@@ -13,6 +13,79 @@
             padding: 0;
         }
 
+        /* Цветовые переменные тем */
+        :root {
+            /* Тема по умолчанию: Purple Glow */
+            --bg-base: #4a336e;
+            --bg-gradient-1: #684a98;
+            --bg-gradient-2: #362252;
+            --bg-gradient-3: #5b3e85;
+            --bg-gradient-4: #2f1c48;
+            --card-bg: #e4d8ff;
+            --card-hover: #f0e8ff;
+            --card-active: #d3c0f9;
+            --text-color: #2b184f;
+            --icon-color: #553b88;
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --modal-bg: #2b184f;
+            --modal-border: #684a98;
+            --grid-color: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Тема Cyberpunk / Matrix */
+        [data-theme="cyberpunk"] {
+            --bg-base: #05130e;
+            --bg-gradient-1: #0a2e1d;
+            --bg-gradient-2: #020d08;
+            --bg-gradient-3: #082618;
+            --bg-gradient-4: #010805;
+            --card-bg: #00ff66;
+            --card-hover: #66ff99;
+            --card-active: #00cc52;
+            --text-color: #021a0d;
+            --icon-color: #02361a;
+            --shadow-color: rgba(0, 255, 102, 0.15);
+            --modal-bg: #031c11;
+            --modal-border: #00ff66;
+            --grid-color: rgba(0, 255, 102, 0.12);
+        }
+
+        /* Тема Synthwave / Sunset */
+        [data-theme="synthwave"] {
+            --bg-base: #220f35;
+            --bg-gradient-1: #ff2a74;
+            --bg-gradient-2: #210a38;
+            --bg-gradient-3: #7b1fa2;
+            --bg-gradient-4: #0f051d;
+            --card-bg: #ff75c3;
+            --card-hover: #ffa3d7;
+            --card-active: #e052a3;
+            --text-color: #2a0422;
+            --icon-color: #6a094a;
+            --shadow-color: rgba(255, 42, 116, 0.25);
+            --modal-bg: #1c0628;
+            --modal-border: #ff2a74;
+            --grid-color: rgba(255, 117, 195, 0.15);
+        }
+
+        /* Тема Dark Minimal */
+        [data-theme="dark"] {
+            --bg-base: #121212;
+            --bg-gradient-1: #242424;
+            --bg-gradient-2: #0d0d0d;
+            --bg-gradient-3: #1a1a1a;
+            --bg-gradient-4: #050505;
+            --card-bg: #2a2a2a;
+            --card-hover: #383838;
+            --card-active: #1f1f1f;
+            --text-color: #ffffff;
+            --icon-color: #b0b0b0;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --modal-bg: #1e1e1e;
+            --modal-border: #444444;
+            --grid-color: rgba(255, 255, 255, 0.05);
+        }
+
         body {
             font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
@@ -22,11 +95,12 @@
             padding: 20px;
             position: relative;
             overflow: hidden;
-            background-color: #4a336e;
+            background-color: var(--bg-base);
             background-image: 
-                radial-gradient(circle at 50% 20%, #684a98 0%, transparent 60%),
-                radial-gradient(circle at 80% 80%, #362252 0%, transparent 70%),
-                linear-gradient(135deg, #5b3e85 0%, #2f1c48 100%);
+                radial-gradient(circle at 50% 20%, var(--bg-gradient-1) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, var(--bg-gradient-2) 0%, transparent 70%),
+                linear-gradient(135deg, var(--bg-gradient-3) 0%, var(--bg-gradient-4) 100%);
+            transition: background 0.4s ease;
         }
 
         /* Мятая сетка */
@@ -34,15 +108,15 @@
             position: absolute;
             top: -10%; left: -10%; right: -10%; bottom: -10%;
             background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
             background-size: 24px 24px;
             filter: url(#crumple);
             pointer-events: none;
             z-index: 1;
         }
 
-        /* Зернистость и эффекты */
+        /* Зернистость */
         body::after {
             content: "";
             position: absolute;
@@ -72,7 +146,7 @@
             margin-bottom: 32px;
             color: #ffffff;
             letter-spacing: -0.2px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
         }
 
         .links {
@@ -98,37 +172,37 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 18px;
-            color: #2b184f;
-            background-color: #e4d8ff;
+            color: var(--text-color);
+            background-color: var(--card-bg);
             cursor: pointer;
             border: none;
             overflow: hidden;
             flex: 1;
             transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1),
                         background-color 0.3s cubic-bezier(0.2, 0, 0, 1),
-                        box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+                        box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1),
+                        color 0.3s ease;
+            box-shadow: 0 4px 16px var(--shadow-color);
         }
 
         .btn:hover {
-            background-color: #f0e8ff;
+            background-color: var(--card-hover);
             transform: translateY(-2px) scale(1.01);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 24px var(--shadow-color);
         }
 
         .btn:active {
             transform: scale(0.96);
-            background-color: #d3c0f9;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            background-color: var(--card-active);
         }
 
         .btn i {
             font-size: 22px;
             margin-right: 16px;
-            color: #553b88;
+            color: var(--icon-color);
             width: 24px;
             text-align: center;
-            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), color 0.3s ease;
         }
 
         .btn:hover i {
@@ -140,8 +214,8 @@
             width: 58px;
             height: 58px;
             border-radius: 20px;
-            background-color: #e4d8ff;
-            color: #553b88;
+            background-color: var(--card-bg);
+            color: var(--icon-color);
             border: none;
             display: flex;
             align-items: center;
@@ -149,21 +223,22 @@
             cursor: pointer;
             overflow: hidden;
             flex-shrink: 0;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 16px var(--shadow-color);
             transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1),
                         background-color 0.3s cubic-bezier(0.2, 0, 0, 1),
-                        box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1);
+                        box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1),
+                        color 0.3s ease;
         }
 
         .copy-btn:hover {
-            background-color: #f0e8ff;
+            background-color: var(--card-hover);
             transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 24px var(--shadow-color);
         }
 
         .copy-btn:active {
             transform: scale(0.92);
-            background-color: #d3c0f9;
+            background-color: var(--card-active);
         }
 
         .copy-btn i {
@@ -177,7 +252,7 @@
 
         .ripple {
             position: absolute;
-            background: rgba(85, 59, 136, 0.25);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             transform: scale(0);
             animation: ripple-animation 0.6s linear;
@@ -196,12 +271,12 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
-            background-color: #e4d8ff;
-            color: #2b184f;
+            background-color: var(--card-bg);
+            color: var(--text-color);
             padding: 12px 24px;
             border-radius: 20px;
             font-weight: 600;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px var(--shadow-color);
             z-index: 100;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -212,6 +287,7 @@
             opacity: 1;
         }
 
+        /* Кнопка с собакой */
         .dog-btn {
             position: fixed;
             bottom: 20px;
@@ -219,8 +295,8 @@
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            background-color: #e4d8ff;
-            color: #553b88;
+            background-color: var(--card-bg);
+            color: var(--icon-color);
             border: none;
             display: flex;
             align-items: center;
@@ -228,15 +304,94 @@
             font-size: 22px;
             cursor: pointer;
             z-index: 10;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 4px 16px var(--shadow-color);
+            transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
         }
 
         .dog-btn:hover {
             transform: scale(1.1) rotate(12deg);
-            background-color: #f0e8ff;
+            background-color: var(--card-hover);
         }
 
+        /* Кнопка переключения тем (справа вверху) */
+        .theme-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+            color: var(--icon-color);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 4px 16px var(--shadow-color);
+            transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.1) rotate(20deg);
+            background-color: var(--card-hover);
+        }
+
+        /* Меню выбора темы */
+        .theme-menu {
+            position: fixed;
+            top: 76px;
+            right: 20px;
+            background-color: var(--modal-bg);
+            border: 2px solid var(--modal-border);
+            border-radius: 20px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 20;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .theme-menu.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+
+        .theme-opt {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            border-radius: 12px;
+            border: none;
+            background: transparent;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .theme-opt:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .theme-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Модалка */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -257,8 +412,8 @@
         }
 
         .modal-card {
-            background-color: #2b184f;
-            border: 2px solid #684a98;
+            background-color: var(--modal-bg);
+            border: 2px solid var(--modal-border);
             padding: 16px;
             border-radius: 24px;
             max-width: 320px;
@@ -281,8 +436,8 @@
         }
 
         .close-btn {
-            background: #e4d8ff;
-            color: #2b184f;
+            background: var(--card-bg);
+            color: var(--text-color);
             border: none;
             padding: 8px 20px;
             border-radius: 16px;
@@ -301,6 +456,27 @@
     </svg>
 
     <div class="distorted-grid"></div>
+
+    <!-- Кнопка выбора темы -->
+    <button class="theme-btn" onclick="toggleThemeMenu()" title="Сменить тему">
+        <i class="fa-solid fa-palette"></i>
+    </button>
+
+    <!-- Выпадающее меню тем -->
+    <div class="theme-menu" id="themeMenu">
+        <button class="theme-opt" onclick="setTheme('default')">
+            <span class="theme-dot" style="background: #e4d8ff;"></span> Purple
+        </button>
+        <button class="theme-opt" onclick="setTheme('cyberpunk')">
+            <span class="theme-dot" style="background: #00ff66;"></span> Cyberpunk
+        </button>
+        <button class="theme-opt" onclick="setTheme('synthwave')">
+            <span class="theme-dot" style="background: #ff75c3;"></span> Synthwave
+        </button>
+        <button class="theme-opt" onclick="setTheme('dark')">
+            <span class="theme-dot" style="background: #ffffff;"></span> Dark
+        </button>
+    </div>
 
     <div class="container">
         <h1>Где меня найти:</h1>
@@ -362,6 +538,7 @@
     <div class="toast" id="toast">Ник скопирован!</div>
 
     <script>
+        // Ripple эффект
         document.querySelectorAll('.btn, .copy-btn').forEach(button => {
             button.addEventListener('click', function(e) {
                 const circle = document.createElement('span');
@@ -375,14 +552,13 @@
                 circle.classList.add('ripple');
 
                 const ripple = this.querySelector('.ripple');
-                if (ripple) {
-                    ripple.remove();
-                }
+                if (ripple) ripple.remove();
 
                 this.appendChild(circle);
             });
         });
 
+        // Функция копирования
         let toastTimeout;
         function copyNickname(text, serviceName) {
             navigator.clipboard.writeText(text).then(() => {
@@ -397,14 +573,43 @@
             });
         }
 
+        // Модалка
         function toggleModal(show) {
             const modal = document.getElementById('dogModal');
-            if (show) {
-                modal.classList.add('active');
-            } else {
-                modal.classList.remove('active');
-            }
+            modal.classList.toggle('active', show);
         }
+
+        // Логика тем
+        function toggleThemeMenu() {
+            const menu = document.getElementById('themeMenu');
+            menu.classList.toggle('active');
+        }
+
+        function setTheme(themeName) {
+            if (themeName === 'default') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.removeItem('user-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', themeName);
+                localStorage.setItem('user-theme', themeName);
+            }
+            document.getElementById('themeMenu').classList.remove('active');
+        }
+
+        // Сохранение и загрузка темы из памяти
+        const savedTheme = localStorage.getItem('user-theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        // Закрывать меню тем при клике мимо
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('themeMenu');
+            const btn = document.querySelector('.theme-btn');
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>
