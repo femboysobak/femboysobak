@@ -22,8 +22,6 @@
             padding: 20px;
             position: relative;
             overflow: hidden;
-
-            /* Базовый глубокий фиолетовый градиент */
             background-color: #4a336e;
             background-image: 
                 radial-gradient(circle at 50% 20%, #684a98 0%, transparent 60%),
@@ -31,30 +29,33 @@
                 linear-gradient(135deg, #5b3e85 0%, #2f1c48 100%);
         }
 
-        /* Тонкая сетка (Grid) */
-        body::before {
-            content: "";
+        /* Обрушиваем сетку через SVG-фильтр (эффект мятой ткани) */
+        .distorted-grid {
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: -10%; left: -10%; right: -10%; bottom: -10%;
             background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
+                linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+            background-size: 24px 24px;
+            filter: url(#crumple);
             pointer-events: none;
             z-index: 1;
         }
 
-        /* Зернистость/Шум (Noise) + световые отблески */
+        /* Складки, тени от изгибов и текстурный шум */
         body::after {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"), 
-                radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
-            background-repeat: repeat, no-repeat;
+            background-image: 
+                url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj4KICA8ZmlsdGVyIGlkPSJub2lzZSI+CiAgICA8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+CiAgICA8ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMSAwIDAgMCAwICAwIDEgMCAwIDAgIDAgMCAxIDAgMCAgMCAwIDAgMC4xNSAwIi8+CiAgPC9maWx0ZXI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIvPgo8L3N2Zz4='),
+                radial-gradient(ellipse at 30% 40%, rgba(255, 255, 255, 0.12) 0%, transparent 40%),
+                radial-gradient(ellipse at 70% 60%, rgba(0, 0, 0, 0.3) 0%, transparent 50%),
+                linear-gradient(45deg, rgba(255,255,255,0.03) 0%, transparent 40%, rgba(0,0,0,0.2) 70%);
+            background-repeat: repeat, no-repeat, no-repeat, no-repeat;
             pointer-events: none;
             z-index: 2;
-            opacity: 0.85;
+            opacity: 0.9;
         }
 
         .container {
@@ -145,6 +146,17 @@
     </style>
 </head>
 <body>
+
+    <!-- Невидимый SVG фильтр деформации для сетки -->
+    <svg style="display: none;">
+        <filter id="crumple">
+            <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="3" result="turbulence" />
+            <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="25" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
+
+    <!-- Искажённая мятая сетка -->
+    <div class="distorted-grid"></div>
 
     <div class="container">
         <h1>Где меня найти:</h1>
