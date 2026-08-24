@@ -81,7 +81,7 @@
             gap: 14px;
         }
 
-        /* Контейнер для строки (ссылка + кнопка копирования) */
+        /* Контейнер для строки */
         .link-row {
             display: flex;
             align-items: center;
@@ -194,7 +194,7 @@
             }
         }
 
-        /* Уведомление о копировании */
+        /* Уведомление */
         .toast {
             position: fixed;
             top: 20px;
@@ -242,7 +242,7 @@
             background-color: #f0e8ff;
         }
 
-        /* Модалка с картинкой */
+        /* Модалка */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -312,7 +312,6 @@
         <h1>Где меня найти:</h1>
 
         <div class="links">
-            <!-- Telegram -->
             <div class="link-row">
                 <a href="https://t.me/xxpeakx" target="_blank" class="btn">
                     <i class="fa-brands fa-telegram"></i>
@@ -323,7 +322,6 @@
                 </button>
             </div>
 
-            <!-- Discord -->
             <div class="link-row">
                 <a href="https://discordapp.com/users/1464303389646000261" target="_blank" class="btn">
                     <i class="fa-brands fa-discord"></i>
@@ -334,7 +332,6 @@
                 </button>
             </div>
 
-            <!-- Steam -->
             <div class="link-row">
                 <a href="https://steamcommunity.com/profiles/76561199866082489" target="_blank" class="btn">
                     <i class="fa-brands fa-steam"></i>
@@ -345,7 +342,6 @@
                 </button>
             </div>
 
-            <!-- GitHub -->
             <div class="link-row">
                 <a href="https://github.com/femboysobak" target="_blank" class="btn">
                     <i class="fa-brands fa-github"></i>
@@ -358,12 +354,10 @@
         </div>
     </div>
 
-    <!-- Кнопка вызова собаки -->
     <button class="dog-btn" onclick="toggleModal(true)">
         <i class="fa-solid fa-dog"></i>
     </button>
 
-    <!-- Модалка с картинкой -->
     <div class="modal-overlay" id="dogModal" onclick="toggleModal(false)">
         <div class="modal-card" onclick="event.stopPropagation()">
             <img src="photo_2026-08-25_02-10-40.jpg" alt="Собака">
@@ -371,11 +365,9 @@
         </div>
     </div>
 
-    <!-- Всплывающее уведомление -->
     <div class="toast" id="toast">Ник скопирован!</div>
 
     <script>
-        // Ripple-эффект
         document.querySelectorAll('.btn, .copy-btn').forEach(button => {
             button.addEventListener('click', function(e) {
                 const circle = document.createElement('span');
@@ -397,7 +389,6 @@
             });
         });
 
-        // Функция копирования
         let toastTimeout;
         function copyNickname(text, serviceName) {
             navigator.clipboard.writeText(text).then(() => {
@@ -412,7 +403,6 @@
             });
         }
 
-        // Модальное окно с собакой
         function toggleModal(show) {
             const modal = document.getElementById('dogModal');
             if (show) {
