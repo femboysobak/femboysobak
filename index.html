@@ -23,24 +23,38 @@
             position: relative;
             overflow: hidden;
 
-            /* Фиолетовый градиент в точной гамме со скриншота */
-            background-color: #59427b;
+            /* Базовый глубокий фиолетовый градиент */
+            background-color: #4a336e;
             background-image: 
-                radial-gradient(circle at 50% 30%, #765a9d 0%, transparent 60%),
-                radial-gradient(circle at 20% 80%, #463065 0%, transparent 50%),
-                linear-gradient(135deg, #674c8f 0%, #3e295b 100%);
+                radial-gradient(circle at 50% 20%, #684a98 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, #362252 0%, transparent 70%),
+                linear-gradient(135deg, #5b3e85 0%, #2f1c48 100%);
         }
 
-        /* Мягкая текстура шума и волн на фоне */
+        /* Тонкая сетка (Grid) */
         body::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: 
-                radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 80%, rgba(0, 0, 0, 0.25) 0%, transparent 60%);
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
             pointer-events: none;
             z-index: 1;
+        }
+
+        /* Зернистость/Шум (Noise) + световые отблески */
+        body::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"), 
+                radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+            background-repeat: repeat, no-repeat;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.85;
         }
 
         .container {
@@ -48,7 +62,7 @@
             width: 100%;
             text-align: center;
             position: relative;
-            z-index: 2;
+            z-index: 3;
         }
 
         h1 {
@@ -57,7 +71,7 @@
             margin-bottom: 32px;
             color: #ffffff;
             letter-spacing: -0.2px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .links {
@@ -66,7 +80,6 @@
             gap: 14px;
         }
 
-        /* Светлые кнопки в стиле Material 3 под тёмный фиолетовый фон */
         .btn {
             position: relative;
             display: flex;
@@ -85,13 +98,13 @@
             transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1),
                         background-color 0.3s cubic-bezier(0.2, 0, 0, 1),
                         box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
 
         .btn:hover {
             background-color: #f0e8ff;
             transform: translateY(-3px) scale(1.015);
-            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
 
         .btn:active {
@@ -114,7 +127,6 @@
             transform: scale(1.15) rotate(-5deg);
         }
 
-        /* Ripple effect */
         .ripple {
             position: absolute;
             background: rgba(85, 59, 136, 0.25);
