@@ -1,184 +1,9 @@
-<script>
-    // Получение комментариев из LocalStorage
-    function getStoredComments() {
-        const data = localStorage.getItem('site_comments');
-        return data ? JSON.parse(data) : [];
-    }
-
-    // Открытие логики комментариев по кнопке
-    function openCommentsSystem() {
-        const storedName = localStorage.getItem('chat_username');
-        if (storedName) {
-            renderComments();
-            document.getElementById('chatModal').classList.add('active');
-        } else {
-            document.getElementById('regModal').classList.add('active');
-        }
-    }
-
-    function saveUserName() {
-        const input = document.getElementById('userNameInput');
-        const val = input.value.trim();
-        if (val) {
-            localStorage.setItem('chat_username', val);
-            document.getElementById('regModal').classList.remove('active');
-            renderComments();
-            document.getElementById('chatModal').classList.add('active');
-        }
-    }
-
-    function closeRegModal() {
-        document.getElementById('regModal').classList.remove('active');
-    }
-
-    function closeChatModal() {
-        document.getElementById('chatModal').classList.remove('active');
-    }
-
-    function renderComments() {
-        const list = document.getElementById('chatList');
-        const comments = getStoredComments();
-        list.innerHTML = '';
-
-        if (comments.length === 0) {
-            list.innerHTML = '<div style="opacity: 0.6; text-align: center; font-size: 13px; padding: 10px;">Пока нет комментариев. Напишите первым!</div>';
-            return;
-        }
-
-        comments.forEach(item => {
-            const el = document.createElement('div');
-            el.className = 'chat-item';
-            el.innerHTML = `<div class="chat-user">${escapeHtml(item.user)}</div><div class="chat-text">${escapeHtml(item.text)}</div>`;
-            list.appendChild(el);
-        });
-        list.scrollTop = list.scrollHeight;
-    }
-
-    function sendComment() {
-        const input = document.getElementById('chatInput');
-        const text = input.value.trim();
-        const username = localStorage.getItem('chat_username') || 'Гость';
-
-        if (text) {
-            const comments = getStoredComments();
-            comments.push({ user: username, text: text });
-            localStorage.setItem('site_comments', JSON.stringify(comments));
-            input.value = '';
-            renderComments();
-        }
-    }
-
-    // Отправка по нажатию Enter
-    document.getElementById('chatInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            sendComment();
-        }
-    });
-
-    document.getElementById('userNameInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            saveUserName();
-        }
-    });
-
-    function escapeHtml(str) {
-        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
-
-    // Загрузка счётчика посещений через API
-    fetch('https://api.counterapi.dev/v1/femboysobak/site-visits/up')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('visitCount').innerText = data.value !== undefined ? data.value : (data.count || '1');
-        })
-        .catch(error => {
-            document.getElementById('visitCount').innerText = '1';
-        });
-
-    // Ripple эффект
-    document.querySelectorAll('.btn, .copy-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            const circle = document.createElement('span');
-            const diameter = Math.max(this.clientWidth, this.clientHeight);
-            const radius = diameter / 2;
-
-            const rect = this.getBoundingClientRect();
-            circle.style.width = circle.style.height = `${diameter}px`;
-            circle.style.left = `${e.clientX - rect.left - radius}px`;
-            circle.style.top = `${e.clientY - rect.top - radius}px`;
-            circle.classList.add('ripple');
-
-            const ripple = this.querySelector('.ripple');
-            if (ripple) ripple.remove();
-
-            this.appendChild(circle);
-        });
-    });
-
-    // Функция копирования
-    let toastTimeout;
-    function copyNickname(text, serviceName) {
-        navigator.clipboard.writeText(text).then(() => {
-            const toast = document.getElementById('toast');
-            toast.innerText = `${serviceName} ник скопирован!`;
-            toast.classList.add('show');
-            
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2200);
-        });
-    }
-
-    // Модалка собаки
-    function toggleModal(show) {
-        const modal = document.getElementById('dogModal');
-        modal.classList.toggle('active', show);
-    }
-
-    // Модалка характеристик
-    function toggleSpecsModal(show) {
-        const modal = document.getElementById('specsModal');
-        modal.classList.toggle('active', show);
-    }
-
-    // Логика тем
-    function toggleThemeMenu() {
-        const menu = document.getElementById('themeMenu');
-        menu.classList.toggle('active');
-    }
-
-    function setTheme(themeName) {
-        if (themeName === 'default') {
-            document.documentElement.removeAttribute('data-theme');
-            localStorage.removeItem('user-theme');
-        } else {
-            document.documentElement.setAttribute('data-theme', themeName);
-            localStorage.setItem('user-theme', themeName);
-        }
-        document.getElementById('themeMenu').classList.remove('active');
-    }
-
-    // Сохранение и загрузка темы из памяти
-    const savedTheme = localStorage.getItem('user-theme');
-    if (savedTheme) {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-    }
-
-    // Закрывать меню тем при клике мимо
-    document.addEventListener('click', (e) => {
-        const menu = document.getElementById('themeMenu');
-        const btn = document.querySelector('.theme-btn');
-        if (!menu.contains(e.target) && !btn.contains(e.target)) {
-            menu.classList.remove('active');
-        }
-    });
-</script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Персональный сайт</title>
+    <title>Мой Сайт</title>
     <style>
         :root {
             --bg-color: #0d0f12;
@@ -189,29 +14,60 @@
             --text-sub: #9ca3af;
             --border-color: #262b36;
             --modal-bg: rgba(13, 15, 18, 0.85);
+            --toast-bg: #0088cc;
         }
 
         [data-theme="purple"] {
-            --bg-color: #120d1c;
-            --card-bg: #1c152d;
-            --accent-color: #8a2be2;
-            --accent-hover: #9f40f5;
-            --border-color: #31234f;
+            --bg-color: #0f0c1b;
+            --card-bg: #181329;
+            --accent-color: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --border-color: #2e234d;
+            --toast-bg: #8b5cf6;
         }
 
         [data-theme="green"] {
-            --bg-color: #0d1c12;
-            --card-bg: #152d1d;
-            --accent-color: #2eca7f;
-            --accent-hover: #40f599;
-            --border-color: #234f31;
+            --bg-color: #091510;
+            --card-bg: #11221a;
+            --accent-color: #10b981;
+            --accent-hover: #059669;
+            --border-color: #1e3a2b;
+            --toast-bg: #10b981;
+        }
+
+        [data-theme="crimson"] {
+            --bg-color: #1a090d;
+            --card-bg: #291117;
+            --accent-color: #f43f5e;
+            --accent-hover: #e11d48;
+            --border-color: #4a1a24;
+            --toast-bg: #f43f5e;
+        }
+
+        [data-theme="amber"] {
+            --bg-color: #181205;
+            --card-bg: #261d0a;
+            --accent-color: #f59e0b;
+            --accent-hover: #d97706;
+            --border-color: #453310;
+            --toast-bg: #f59e0b;
+        }
+
+        [data-theme="cyberpunk"] {
+            --bg-color: #050b14;
+            --card-bg: #0b1728;
+            --accent-color: #00f0ff;
+            --accent-hover: #00b8cc;
+            --border-color: #133353;
+            --toast-bg: #00f0ff;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -222,34 +78,45 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
         }
 
         .container {
             width: 100%;
-            max-width: 480px;
-            background: var(--card-bg);
+            max-width: 440px;
+            background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 24px;
+            padding: 28px 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
             position: relative;
+            transition: background-color 0.4s ease, border-color 0.4s ease;
         }
 
-        .header {
+        .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .visit-counter {
-            font-size: 13px;
-            color: var(--text-sub);
-            background: rgba(255,255,255,0.05);
-            padding: 6px 12px;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        .visit-counter span {
+            color: var(--accent-color);
+            font-weight: 700;
         }
 
         .theme-wrapper {
@@ -257,173 +124,342 @@
         }
 
         .theme-btn {
-            background: none;
-            border: none;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
-            font-size: 18px;
-            padding: 5px;
+            transition: all 0.2s ease;
         }
 
-        .theme-menu {
+        .theme-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(1.05);
+        }
+
+        .theme-dropdown {
             position: absolute;
+            top: 45px;
             right: 0;
-            top: 30px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border-radius: 16px;
             padding: 8px;
             display: none;
             flex-direction: column;
-            gap: 5px;
-            z-index: 10;
+            gap: 4px;
+            width: 150px;
+            z-index: 50;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
 
-        .theme-menu.active {
+        .theme-dropdown.active {
             display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .theme-option {
             background: none;
             border: none;
             color: var(--text-main);
-            padding: 6px 12px;
-            text-align: left;
-            cursor: pointer;
-            border-radius: 6px;
+            padding: 8px 12px;
+            border-radius: 10px;
             font-size: 13px;
-        }
-
-        .theme-option:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .profile {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--accent-color);
-            margin-bottom: 12px;
-        }
-
-        .buttons-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            background: rgba(255,255,255,0.03);
-            color: var(--text-main);
-            font-weight: 500;
+            text-align: left;
             cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .theme-option:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .theme-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .avatar-container {
             position: relative;
+            margin-bottom: 16px;
+        }
+
+        .avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+            padding: 3px;
+            background: var(--card-bg);
+            transition: border-color 0.4s ease, transform 0.3s ease;
+        }
+
+        .avatar-container:hover .avatar {
+            transform: scale(1.03);
+        }
+
+        .profile-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .profile-bio {
+            font-size: 14px;
+            color: var(--text-sub);
+            max-width: 280px;
+            line-height: 1.4;
+        }
+
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            position: relative;
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             overflow: hidden;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
+            text-decoration: none;
         }
 
         .btn:hover {
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
         }
 
-        /* Ripple Effect */
+        .btn-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-icon {
+            font-size: 18px;
+            width: 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-action {
+            font-size: 12px;
+            color: var(--text-sub);
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover .btn-action {
+            color: var(--text-main);
+            background: var(--accent-color);
+        }
+
         .ripple {
             position: absolute;
             border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
             transform: scale(0);
-            animation: ripple-anim 0.6s linear;
-            background-color: rgba(255, 255, 255, 0.2);
+            animation: ripple-effect 0.6s linear;
+            pointer-events: none;
         }
 
-        @keyframes ripple-anim {
+        @keyframes ripple-effect {
             to {
                 transform: scale(4);
                 opacity: 0;
             }
         }
 
-        /* Modal Styles */
-        .modal {
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: var(--modal-bg);
-            backdrop-filter: blur(5px);
-            display: none;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 100;
             padding: 20px;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
 
-        .modal.active {
-            display: flex;
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        .modal-content {
+        .modal-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 24px;
+            padding: 24px;
             width: 100%;
             max-width: 400px;
             position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
         }
 
         .close-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: none;
-            border: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
             color: var(--text-sub);
-            font-size: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
             cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
         }
 
-        /* Chat Styles */
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
+
+        .dog-img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin-top: 8px;
+        }
+
+        .specs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .spec-name {
+            color: var(--text-sub);
+        }
+
+        .spec-val {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Чат и комментарии */
         .chat-list {
-            max-height: 250px;
+            max-height: 280px;
+            min-height: 120px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin: 15px 0;
-            padding-right: 5px;
+            margin: 16px 0;
+            padding-right: 4px;
+        }
+
+        .chat-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .chat-list::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
         }
 
         .chat-item {
-            background: rgba(255,255,255,0.04);
-            padding: 10px;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .chat-user {
-            font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
+            font-weight: 700;
             color: var(--accent-color);
-            margin-bottom: 4px;
         }
 
         .chat-text {
             font-size: 14px;
             color: var(--text-main);
             word-break: break-word;
+            line-height: 1.35;
         }
 
         .input-group {
@@ -431,39 +467,55 @@
             gap: 8px;
         }
 
-        input[type="text"] {
+        .custom-input {
             flex: 1;
-            padding: 10px;
-            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border-color);
-            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 12px 14px;
             color: var(--text-main);
+            font-size: 14px;
             outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .custom-input:focus {
+            border-color: var(--accent-color);
         }
 
         .send-btn {
-            padding: 10px 16px;
             background: var(--accent-color);
-            border: none;
-            border-radius: 8px;
             color: #fff;
-            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            padding: 0 16px;
             font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Toast */
+        .send-btn:hover {
+            background: var(--accent-hover);
+        }
+
         .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: var(--accent-color);
+            background: var(--toast-bg);
             color: #fff;
             padding: 10px 20px;
-            border-radius: 20px;
+            border-radius: 30px;
             font-size: 14px;
-            transition: transform 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 200;
+            pointer-events: none;
         }
 
         .toast.show {
@@ -474,89 +526,144 @@
 <body>
 
 <div class="container">
-    <div class="header">
-        <div class="visit-counter">Просмотров: <span id="visitCount">...</span></div>
+    <div class="top-bar">
+        <div class="visit-counter">
+            Просмотров: <span id="visitCount">...</span>
+        </div>
         <div class="theme-wrapper">
-            <button class="theme-btn" onclick="toggleThemeMenu()">🎨</button>
-            <div class="theme-menu" id="themeMenu">
-                <button class="theme-option" onclick="setTheme('default')">Стандартная</button>
-                <button class="theme-option" onclick="setTheme('purple')">Фиолетовая</button>
-                <button class="theme-option" onclick="setTheme('green')">Зелёная</button>
+            <button class="theme-btn" onclick="toggleThemeMenu()" aria-label="Сменить тему">🎨</button>
+            <div class="theme-dropdown" id="themeMenu">
+                <button class="theme-option" onclick="setTheme('default')">
+                    <span class="theme-dot" style="background: #0088cc;"></span> Стандартная
+                </button>
+                <button class="theme-option" onclick="setTheme('purple')">
+                    <span class="theme-dot" style="background: #8b5cf6;"></span> Фиолетовая
+                </button>
+                <button class="theme-option" onclick="setTheme('green')">
+                    <span class="theme-dot" style="background: #10b981;"></span> Зелёная
+                </button>
+                <button class="theme-option" onclick="setTheme('crimson')">
+                    <span class="theme-dot" style="background: #f43f5e;"></span> Малиновая
+                </button>
+                <button class="theme-option" onclick="setTheme('amber')">
+                    <span class="theme-dot" style="background: #f59e0b;"></span> Янтарная
+                </button>
+                <button class="theme-option" onclick="setTheme('cyberpunk')">
+                    <span class="theme-dot" style="background: #00f0ff;"></span> Киберпанк
+                </button>
             </div>
         </div>
     </div>
 
-    <div class="profile">
-        <img src="https://via.placeholder.com/90" alt="Аватар" class="avatar">
-        <h2>Мой Профиль</h2>
+    <div class="profile-section">
+        <div class="avatar-container">
+            <img src="https://via.placeholder.com/150" alt="Аватар" class="avatar">
+        </div>
+        <h1 class="profile-name">Персональный сайт</h1>
+        <p class="profile-bio">Добро пожаловать на мою личную страницу!</p>
     </div>
 
-    <div class="buttons-grid">
-        <button class="btn" onclick="copyNickname('User#1234', 'Discord')">
-            <span>Discord</span>
-            <span>Копировать</span>
+    <div class="links-list">
+        <button class="btn" onclick="copyNickname('DiscordUser#0000', 'Discord')">
+            <div class="btn-left">
+                <span class="btn-icon">💬</span>
+                <span>Discord</span>
+            </div>
+            <span class="btn-action">Копировать</span>
         </button>
+
         <button class="btn" onclick="toggleSpecsModal(true)">
-            <span>Характеристики ПК</span>
-            <span>Открыть</span>
+            <div class="btn-left">
+                <span class="btn-icon">💻</span>
+                <span>Характеристики ПК</span>
+            </div>
+            <span class="btn-action">Смотреть</span>
         </button>
+
         <button class="btn" onclick="toggleModal(true)">
-            <span>Моя собака</span>
-            <span>Смотреть</span>
+            <div class="btn-left">
+                <span class="btn-icon">🐶</span>
+                <span>Моя собака</span>
+            </div>
+            <span class="btn-action">Фото</span>
         </button>
+
         <button class="btn" onclick="openCommentsSystem()">
-            <span>Комментарии</span>
-            <span>Открыть</span>
+            <div class="btn-left">
+                <span class="btn-icon">✏️</span>
+                <span>Комментарии</span>
+            </div>
+            <span class="btn-action">Открыть</span>
         </button>
     </div>
 </div>
 
-<!-- Модалка регистрации -->
-<div class="modal" id="regModal">
-    <div class="modal-content">
-        <button class="close-btn" onclick="closeRegModal()">&times;</button>
-        <h3>Представьтесь</h3>
-        <p style="font-size: 13px; color: var(--text-sub); margin: 8px 0 15px 0;">Введите ваше имя, чтобы оставлять комментарии</p>
+<!-- Модалка регистрации / Ввода имени -->
+<div class="modal-overlay" id="regModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title">Представьтесь</h3>
+            <button class="close-btn" onclick="closeRegModal()">&times;</button>
+        </div>
+        <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 14px;">Введите ваше имя, чтобы оставлять комментарии на сайте:</p>
         <div class="input-group">
-            <input type="text" id="userNameInput" placeholder="Ваше имя...">
+            <input type="text" class="custom-input" id="userNameInput" placeholder="Ваше имя..." maxlength="25">
             <button class="send-btn" onclick="saveUserName()">Сохранить</button>
         </div>
     </div>
 </div>
 
 <!-- Модалка комментариев -->
-<div class="modal" id="chatModal">
-    <div class="modal-content">
-        <button class="close-btn" onclick="closeChatModal()">&times;</button>
-        <h3>Комментарии</h3>
+<div class="modal-overlay" id="chatModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title">Комментарии</h3>
+            <button class="close-btn" onclick="closeChatModal()">&times;</button>
+        </div>
         <div class="chat-list" id="chatList"></div>
         <div class="input-group">
-            <input type="text" id="chatInput" placeholder="Ваш комментарий...">
+            <input type="text" class="custom-input" id="chatInput" placeholder="Напишите комментарий..." maxlength="200">
             <button class="send-btn" onclick="sendComment()">Отправить</button>
         </div>
     </div>
 </div>
 
-<!-- Модалка Собака -->
-<div class="modal" id="dogModal">
-    <div class="modal-content" style="text-align: center;">
-        <button class="close-btn" onclick="toggleModal(false)">&times;</button>
-        <h3>Моя собака</h3>
-        <img src="https://via.placeholder.com/300x200" alt="Собака" style="width: 100%; border-radius: 12px; margin-top: 15px;">
+<!-- Модалка с собакой -->
+<div class="modal-overlay" id="dogModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title">Моя собака</h3>
+            <button class="close-btn" onclick="toggleModal(false)">&times;</button>
+        </div>
+        <img src="https://via.placeholder.com/400x300" alt="Фото собаки" class="dog-img">
     </div>
 </div>
 
-<!-- Модалка Характеристики -->
-<div class="modal" id="specsModal">
-    <div class="modal-content">
-        <button class="close-btn" onclick="toggleSpecsModal(false)">&times;</button>
-        <h3>Характеристики ПК</h3>
-        <ul style="margin-top: 15px; padding-left: 20px; font-size: 14px; line-height: 1.8;">
-            <li><strong>Процессор:</strong> Intel N95</li>
-            <li><strong>ОЗУ:</strong> 32 GB RAM</li>
-            <li><strong>Накопитель:</strong> 1 TB SSD</li>
-            <li><strong>ОС:</strong> Windows 11</li>
-        </ul>
+<!-- Модалка с ПК -->
+<div class="modal-overlay" id="specsModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title">Характеристики ПК</h3>
+            <button class="close-btn" onclick="toggleSpecsModal(false)">&times;</button>
+        </div>
+        <div class="specs-list">
+            <div class="spec-item">
+                <span class="spec-name">Процессор</span>
+                <span class="spec-val">Intel N95</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-name">Оперативная память</span>
+                <span class="spec-val">32 GB RAM</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-name">Накопитель</span>
+                <span class="spec-val">1 TB SSD</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-name">Операционная система</span>
+                <span class="spec-val">Windows 11</span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -569,7 +676,7 @@
         return data ? JSON.parse(data) : [];
     }
 
-    // Открытие логики комментариев по кнопке
+    // Открытие комментариев
     function openCommentsSystem() {
         const storedName = localStorage.getItem('chat_username');
         if (storedName) {
@@ -605,7 +712,7 @@
         list.innerHTML = '';
 
         if (comments.length === 0) {
-            list.innerHTML = '<div style="opacity: 0.6; text-align: center; font-size: 13px; padding: 10px;">Пока нет комментариев. Напишите первым!</div>';
+            list.innerHTML = '<div style="opacity: 0.5; text-align: center; font-size: 13px; padding: 20px 0;">Пока нет комментариев. Напишите первым!</div>';
             return;
         }
 
@@ -632,7 +739,7 @@
         }
     }
 
-    // Отправка по нажатию Enter
+    // Обработка клавиши Enter
     document.getElementById('chatInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             sendComment();
@@ -649,7 +756,7 @@
         return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    // Загрузка счётчика посещений через API
+    // Счётчик просмотров
     fetch('https://api.counterapi.dev/v1/femboysobak/site-visits/up')
         .then(response => response.json())
         .then(data => {
@@ -679,12 +786,12 @@
         });
     });
 
-    // Функция копирования
+    // Копирование никнейма
     let toastTimeout;
     function copyNickname(text, serviceName) {
         navigator.clipboard.writeText(text).then(() => {
             const toast = document.getElementById('toast');
-            toast.innerText = `${serviceName} ник скопирован!`;
+            toast.innerText = `${serviceName} скопирован!`;
             toast.classList.add('show');
             
             clearTimeout(toastTimeout);
@@ -694,19 +801,18 @@
         });
     }
 
-    // Модалка собаки
+    // Управление модалками
     function toggleModal(show) {
         const modal = document.getElementById('dogModal');
         modal.classList.toggle('active', show);
     }
 
-    // Модалка характеристик
     function toggleSpecsModal(show) {
         const modal = document.getElementById('specsModal');
         modal.classList.toggle('active', show);
     }
 
-    // Логика тем
+    // Темы
     function toggleThemeMenu() {
         const menu = document.getElementById('themeMenu');
         menu.classList.toggle('active');
@@ -723,17 +829,17 @@
         document.getElementById('themeMenu').classList.remove('active');
     }
 
-    // Сохранение и загрузка темы из памяти
+    // Сохранение выбранной темы
     const savedTheme = localStorage.getItem('user-theme');
     if (savedTheme) {
         document.documentElement.setAttribute('data-theme', savedTheme);
     }
 
-    // Закрывать меню тем при клике мимо
+    // Закрытие темы по клику снаружи
     document.addEventListener('click', (e) => {
         const menu = document.getElementById('themeMenu');
         const btn = document.querySelector('.theme-btn');
-        if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
             menu.classList.remove('active');
         }
     });
