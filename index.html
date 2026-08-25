@@ -92,7 +92,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 40px 20px;
             position: relative;
             overflow-x: hidden;
             background-color: var(--bg-base);
@@ -248,6 +248,36 @@
 
         .copy-btn:hover i {
             transform: scale(1.15);
+        }
+
+        /* Блок с комментариями */
+        .comments-container {
+            margin-top: 32px;
+            background-color: var(--modal-bg);
+            border: 2px solid var(--modal-border);
+            padding: 20px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            text-align: left;
+        }
+
+        .comments-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comments-title i {
+            color: var(--card-bg);
+        }
+
+        #cusdis_thread iframe {
+            color-scheme: dark;
+            width: 100% !important;
         }
 
         .ripple {
@@ -619,6 +649,24 @@
                     <i class="fa-regular fa-copy"></i>
                 </button>
             </div>
+        </div>
+
+        <!-- АНОНИМНАЯ СТЕНА КОММЕНТАРИЕВ -->
+        <div class="comments-container">
+            <div class="comments-title">
+                <i class="fa-solid fa-comments"></i>
+                <span>Стена гостей</span>
+            </div>
+            
+            <div id="cusdis_thread"
+                data-host="https://cusdis.com"
+                data-app-id="62478f72-9781-42cb-9d22-1d167f53f938"
+                data-page-id="femboysobak_main"
+                data-page-url="https://github.com/femboysobak"
+                data-page-title="Где меня найти"
+                data-theme="dark"
+            ></div>
+            <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
         </div>
     </div>
 
