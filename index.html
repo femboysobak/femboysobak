@@ -103,7 +103,6 @@
             transition: background 0.4s ease;
         }
 
-        /* Мятая сетка */
         .distorted-grid {
             position: absolute;
             top: -10%; left: -10%; right: -10%; bottom: -10%;
@@ -116,7 +115,6 @@
             z-index: 1;
         }
 
-        /* Зернистость */
         body::after {
             content: "";
             position: absolute;
@@ -287,7 +285,6 @@
             opacity: 1;
         }
 
-        /* Кнопка с собакой (снизу слева) */
         .dog-btn {
             position: fixed;
             bottom: 20px;
@@ -313,7 +310,6 @@
             background-color: var(--card-hover);
         }
 
-        /* Счётчик посещений (снизу справа) */
         .visitor-counter {
             position: fixed;
             bottom: 20px;
@@ -341,7 +337,6 @@
             font-size: 16px;
         }
 
-        /* Кнопка комментариев (справа вверху, слева от ноутбука) */
         .comments-btn {
             position: fixed;
             top: 20px;
@@ -367,7 +362,6 @@
             background-color: var(--card-hover);
         }
 
-        /* Кнопка с ноутбуком (справа вверху) */
         .specs-btn {
             position: fixed;
             top: 20px;
@@ -393,7 +387,6 @@
             background-color: var(--card-hover);
         }
 
-        /* Кнопка переключения тем (справа вверху) */
         .theme-btn {
             position: fixed;
             top: 20px;
@@ -419,7 +412,6 @@
             background-color: var(--card-hover);
         }
 
-        /* Меню выбора темы */
         .theme-menu {
             position: fixed;
             top: 76px;
@@ -471,7 +463,6 @@
             display: inline-block;
         }
 
-        /* Модальные окна */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -564,7 +555,6 @@
             font-weight: 600;
         }
 
-        /* Стили системы комментариев */
         .comments-list {
             max-height: 240px;
             overflow-y: auto;
@@ -625,6 +615,9 @@
             border-radius: 14px;
             font-weight: 600;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
@@ -639,22 +632,18 @@
 
     <div class="distorted-grid"></div>
 
-    <!-- Кнопка комментариев -->
     <button class="comments-btn" onclick="handleCommentsClick()" title="Комментарии">
         <i class="fa-solid fa-comments"></i>
     </button>
 
-    <!-- Кнопка характеристик ноутбука -->
     <button class="specs-btn" onclick="toggleSpecsModal(true)" title="Характеристики ноутбука">
         <i class="fa-solid fa-laptop"></i>
     </button>
 
-    <!-- Кнопка выбора темы -->
     <button class="theme-btn" onclick="toggleThemeMenu()" title="Сменить тему">
         <i class="fa-solid fa-palette"></i>
     </button>
 
-    <!-- Выпадающее меню тем -->
     <div class="theme-menu" id="themeMenu">
         <button class="theme-opt" onclick="setTheme('default')">
             <span class="theme-dot" style="background: #e4d8ff;"></span> Purple
@@ -716,18 +705,15 @@
         </div>
     </div>
 
-    <!-- Кнопка с собакой -->
     <button class="dog-btn" onclick="toggleModal(true)">
         <i class="fa-solid fa-dog"></i>
     </button>
 
-    <!-- Счётчик посетителей -->
     <div class="visitor-counter" title="Всего визитов на сайт">
         <i class="fa-solid fa-eye"></i>
         <span id="visitCount">...</span>
     </div>
 
-    <!-- Модалка с собакой -->
     <div class="modal-overlay" id="dogModal" onclick="toggleModal(false)">
         <div class="modal-card" onclick="event.stopPropagation()">
             <img src="photo_2026-08-25_02-10-40.jpg" alt="Собака">
@@ -735,7 +721,6 @@
         </div>
     </div>
 
-    <!-- Модалка с комплектующими ноутбука -->
     <div class="modal-overlay" id="specsModal" onclick="toggleSpecsModal(false)">
         <div class="modal-card" onclick="event.stopPropagation()">
             <div class="specs-header">
@@ -757,9 +742,9 @@
         <div class="modal-card" onclick="event.stopPropagation()">
             <div class="specs-header">Ваше имя</div>
             <div class="comment-input-group">
-                <input type="text" id="usernameInput" class="comment-input" placeholder="Введите ваш ник..." maxlength="20">
+                <input type="text" id="usernameInput" class="comment-input" placeholder="Введите ваш ник..." maxlength="20" onkeydown="handleNameKeyDown(event)">
             </div>
-            <button class="send-btn" onclick="saveNameAndOpenComments()">Продолжить</button>
+            <button class="send-btn" style="width: 100%; justify-content: center;" onclick="saveNameAndOpenComments()">Продолжить</button>
         </div>
     </div>
 
@@ -774,8 +759,8 @@
                 <div style="opacity: 0.6;">Загрузка...</div>
             </div>
             <div class="comment-input-group">
-                <input type="text" id="commentInput" class="comment-input" placeholder="Напишите комментарий..." maxlength="150">
-                <button class="send-btn" onclick="postComment()"><i class="fa-solid fa-paper-plane"></i></button>
+                <input type="text" id="commentInput" class="comment-input" placeholder="Напишите комментарий..." maxlength="150" onkeydown="handleCommentKeyDown(event)">
+                <button class="send-btn" id="sendBtn" onclick="postComment()"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
             <button class="close-btn" onclick="toggleCommentsModal(false)">Закрыть</button>
         </div>
@@ -784,13 +769,13 @@
     <div class="toast" id="toast">Ник скопирован!</div>
 
     <script>
-        // Загрузка счётчика посещений через API
+        // Счётчик посещений
         fetch('https://api.counterapi.dev/v1/femboysobak/site-visits/up')
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 document.getElementById('visitCount').innerText = data.value !== undefined ? data.value : (data.count || '1');
             })
-            .catch(error => {
+            .catch(() => {
                 document.getElementById('visitCount').innerText = '1';
             });
 
@@ -814,7 +799,7 @@
             });
         });
 
-        // Функция копирования
+        // Копирование ника
         let toastTimeout;
         function copyNickname(text, serviceName) {
             navigator.clipboard.writeText(text).then(() => {
@@ -829,22 +814,16 @@
             });
         }
 
-        // Модалка собаки
         function toggleModal(show) {
-            const modal = document.getElementById('dogModal');
-            modal.classList.toggle('active', show);
+            document.getElementById('dogModal').classList.toggle('active', show);
         }
 
-        // Модалка характеристик
         function toggleSpecsModal(show) {
-            const modal = document.getElementById('specsModal');
-            modal.classList.toggle('active', show);
+            document.getElementById('specsModal').classList.toggle('active', show);
         }
 
-        // Логика тем
         function toggleThemeMenu() {
-            const menu = document.getElementById('themeMenu');
-            menu.classList.toggle('active');
+            document.getElementById('themeMenu').classList.toggle('active');
         }
 
         function setTheme(themeName) {
@@ -858,13 +837,11 @@
             document.getElementById('themeMenu').classList.remove('active');
         }
 
-        // Сохранение и загрузка темы из памяти
         const savedTheme = localStorage.getItem('user-theme');
         if (savedTheme) {
             document.documentElement.setAttribute('data-theme', savedTheme);
         }
 
-        // Закрывать меню тем при клике мимо
         document.addEventListener('click', (e) => {
             const menu = document.getElementById('themeMenu');
             const btn = document.querySelector('.theme-btn');
@@ -873,8 +850,11 @@
             }
         });
 
-        /* --- СИСТЕМА КОММЕНТАРИЕВ --- */
-        const BIN_ID = '66cb2f22e41b4d34e4256eb2'; // Публичное хранилище JSONBin
+        /* --- РАБОТАЮЩАЯ СИСТЕМА КОММЕНТАРИЕВ --- */
+        const BIN_ID = '66cb2f22e41b4d34e4256eb2';
+        const API_KEY = '$2a$10$Un19JAtE32v9sO9/rTIno./jS7wQpA/Ea8I1i/i4m3t6QYcM2vVym';
+
+        let currentComments = [];
 
         function handleCommentsClick() {
             const savedName = localStorage.getItem('user-comment-name');
@@ -887,11 +867,35 @@
         }
 
         function toggleNameModal(show) {
-            document.getElementById('nameModal').classList.toggle('active', show);
+            const modal = document.getElementById('nameModal');
+            modal.classList.toggle('active', show);
+            if (show) {
+                setTimeout(() => document.getElementById('usernameInput').focus(), 100);
+            }
         }
 
         function toggleCommentsModal(show) {
-            document.getElementById('commentsModal').classList.toggle('active', show);
+            const modal = document.getElementById('commentsModal');
+            modal.classList.toggle('active', show);
+            if (show) {
+                setTimeout(() => document.getElementById('commentInput').focus(), 100);
+            }
+        }
+
+        // Обработка Enter при вводе имени
+        function handleNameKeyDown(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                saveNameAndOpenComments();
+            }
+        }
+
+        // Обработка Enter при вводе комментария
+        function handleCommentKeyDown(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                postComment();
+            }
         }
 
         function saveNameAndOpenComments() {
@@ -920,22 +924,33 @@
         }
 
         function escapeHtml(str) {
-            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
         }
 
-        let currentComments = [];
-
         function loadComments() {
+            const container = document.getElementById('commentsList');
+            container.innerHTML = '<div style="opacity: 0.6;">Загрузка...</div>';
+
             fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                headers: { 'X-Master-Key': '$2a$10$Un19JAtE32v9sO9/rTIno./jS7wQpA/Ea8I1i/i4m3t6QYcM2vVym' }
+                headers: { 'X-Master-Key': API_KEY }
             })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('Ошибка сети');
+                return res.json();
+            })
             .then(data => {
                 currentComments = data.record.comments || [];
                 renderComments(currentComments);
             })
             .catch(() => {
-                document.getElementById('commentsList').innerHTML = '<div style="opacity: 0.6;">Ошибка загрузки</div>';
+                // Если API недоступно, читаем из локального хранилища
+                const localData = localStorage.getItem('local-comments');
+                currentComments = localData ? JSON.parse(localData) : [];
+                renderComments(currentComments);
             });
         }
 
@@ -946,6 +961,9 @@
 
             if (!text || !author) return;
 
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+
             const newComment = { author, text };
             const updatedComments = [...currentComments, newComment];
 
@@ -955,13 +973,27 @@
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Master-Key': '$2a$10$Un19JAtE32v9sO9/rTIno./jS7wQpA/Ea8I1i/i4m3t6QYcM2vVym'
+                    'X-Master-Key': API_KEY
                 },
                 body: JSON.stringify({ comments: updatedComments })
             })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('Ошибка сервера');
+                return res.json();
+            })
             .then(() => {
-                loadComments();
+                currentComments = updatedComments;
+                localStorage.setItem('local-comments', JSON.stringify(currentComments));
+                renderComments(currentComments);
+            })
+            .catch(() => {
+                // В случае ошибки сети сохраняем локально
+                currentComments = updatedComments;
+                localStorage.setItem('local-comments', JSON.stringify(currentComments));
+                renderComments(currentComments);
+            })
+            .finally(() => {
+                sendBtn.disabled = false;
             });
         }
     </script>
