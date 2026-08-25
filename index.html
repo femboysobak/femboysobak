@@ -30,6 +30,7 @@
             --modal-bg: #2b184f;
             --modal-border: #684a98;
             --grid-color: rgba(255, 255, 255, 0.08);
+            --author-color: #ffd8a8;
         }
 
         /* Тема Cyberpunk / Matrix */
@@ -48,6 +49,7 @@
             --modal-bg: #031c11;
             --modal-border: #00ff66;
             --grid-color: rgba(0, 255, 102, 0.12);
+            --author-color: #00ff66;
         }
 
         /* Тема Synthwave / Sunset */
@@ -66,6 +68,7 @@
             --modal-bg: #1c0628;
             --modal-border: #ff2a74;
             --grid-color: rgba(255, 117, 195, 0.15);
+            --author-color: #ff75c3;
         }
 
         /* Тема Dark Minimal */
@@ -84,6 +87,7 @@
             --modal-bg: #1e1e1e;
             --modal-border: #444444;
             --grid-color: rgba(255, 255, 255, 0.05);
+            --author-color: #64b5f6;
         }
 
         body {
@@ -567,23 +571,33 @@
         }
 
         .comment-item {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.08);
             padding: 10px 14px;
             border-radius: 14px;
+            border-left: 3px solid var(--author-color);
             word-break: break-word;
         }
 
         .comment-author {
             font-weight: 700;
             font-size: 13px;
-            color: var(--card-bg);
-            margin-bottom: 2px;
+            color: var(--author-color);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .comment-author::before {
+            content: "•";
+            font-size: 16px;
         }
 
         .comment-text {
             font-size: 14px;
             color: #ffffff;
-            opacity: 0.9;
+            opacity: 0.95;
+            line-height: 1.3;
         }
 
         .comment-input-group {
@@ -850,7 +864,7 @@
             }
         });
 
-        /* --- РАБОТАЮЩАЯ СИСТЕМА КОММЕНТАРИЕВ --- */
+        /* --- СИСТЕМА КОММЕНТАРИЕВ С ЧЁТКИМИ НИКАМИ --- */
         const BIN_ID = '66cb2f22e41b4d34e4256eb2';
         const API_KEY = '$2a$10$Un19JAtE32v9sO9/rTIno./jS7wQpA/Ea8I1i/i4m3t6QYcM2vVym';
 
@@ -947,7 +961,6 @@
                 renderComments(currentComments);
             })
             .catch(() => {
-                // Если API недоступно, читаем из локального хранилища
                 const localData = localStorage.getItem('local-comments');
                 currentComments = localData ? JSON.parse(localData) : [];
                 renderComments(currentComments);
@@ -987,7 +1000,6 @@
                 renderComments(currentComments);
             })
             .catch(() => {
-                // В случае ошибки сети сохраняем локально
                 currentComments = updatedComments;
                 localStorage.setItem('local-comments', JSON.stringify(currentComments));
                 renderComments(currentComments);
